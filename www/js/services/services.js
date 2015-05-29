@@ -50,15 +50,23 @@ angular.module('starter.services', [])
 }).factory('Athletes', function($http) {
       // Might use a resource here that returns a JSON array
 
-      // Some fake testing data
-      var getAthletes = function() {
-          return $http.get('data/athletes.json')
-      };
+      var athletes = $http.get('data/athletes.json');
+
 
 
 
       return {
-        getAthletes : getAthletes
+        getAthletes: function (callback) {
+          athletes.success(callback);
+        },
+        get: function(athletes, chatId) {
+          for (var i = 0; i < athletes.length; i++) {
+            if (athletes[i].id === parseInt(chatId)) {
+              return athletes[i];
+            }
+          }
+          return null;
+        }
       }
 
     });

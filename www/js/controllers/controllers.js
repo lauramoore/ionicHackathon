@@ -3,10 +3,8 @@ angular.module('starter.controllers', [])
 .controller('DashCtrl', function($scope) {})
 
 .controller('ChatsCtrl', function($scope, Chats, Athletes) {
+        Athletes.getAthletes(function(result){ $scope.chats = result; });
 
-   Athletes.getAthletes().success(function (response) {
-       $scope.chats=response;
-   });
 
   $scope.launchAthleteBio = function(url){
             window.open(url) ;
@@ -17,8 +15,12 @@ angular.module('starter.controllers', [])
   }
 })
 
-.controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
-  $scope.chat = Chats.get($stateParams.chatId);
+.controller('ChatDetailCtrl', function($scope, $stateParams, Athletes, $sce) {
+        Athletes.getAthletes(function(result){ $scope.chat = Athletes.get(result, $stateParams.chatId) });
+
+        $scope.trustSrc = function(src) {
+            return $sce.trustAsResourceUrl(src);
+        }
 })
 
 .controller('AccountCtrl', function($scope) {
