@@ -2,9 +2,12 @@ angular.module('starter.controllers', [])
 
 .controller('DashCtrl', function($scope) {})
 
-.controller('ChatsCtrl', function($scope, Chats, Athletes) {
+.controller('ChatsCtrl', function($scope, $location, Chats, Athletes) {
         Athletes.getAthletes(function(result){ $scope.chats = result; });
 
+        $scope.go = function ( path ) {
+            $location.path( path );
+        };
 
   $scope.launchAthleteBio = function(url){
             window.open(url) ;
@@ -21,7 +24,29 @@ angular.module('starter.controllers', [])
         $scope.trustSrc = function(src) {
             return $sce.trustAsResourceUrl(src);
         }
+}).controller('WodCtrl', function($scope, $stateParams, Wods, Athletes) {
+        $scope.$on("$ionicView.afterEnter", function() {
+            Athletes.getAthletes(function (result) {
+                $scope.wodTitle = Athletes.get(result, $stateParams.chatId).name+" 2014 wods";
+                console.log($scope.athleteName);
+            });
+        });
+
+        Wods.getWods(function(result){
+            $scope.wods = result;
+            angular.forEach($scope.wods, function(wod) {
+                angular.forEach(wod.scores, function(score) {
+                    if($stateParams.chatId == score.athleteId) {
+                        wod.athleteScore = score;
+                    }
+                });
+            });
+        });
 })
+
+
+
+
 
 .controller('AccountCtrl', function($scope) {
   $scope.settings = {
